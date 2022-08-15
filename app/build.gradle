@@ -3,30 +3,93 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
+//apply plugin: 'kotlin-parcelize'
+
+def releaseTime() {
+    return new Date().format("yyyy-MM-dd", TimeZone.getTimeZone("UTC"))
+}
 
 android {
+//    buildFeatures {
+//        viewBinding true
+//    }
     compileSdkVersion rootProject.ext.compile_version
     defaultConfig {
         applicationId rootProject.ext.app_id
         minSdkVersion rootProject.ext.min_version
         targetSdkVersion rootProject.ext.target_version
-        versionCode 1
-        versionName "0.0.1"
+        versionCode rootProject.ext.build_version_code
+        versionName rootProject.ext.build_version_name
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        // 默认是android的渠道
+        manifestPlaceholders.put("CHANNEL_VALUE", "android")
+        signingConfig signingConfigs.debug
     }
+
+    signingConfigs {
+        debug {
+            storeFile file("../raykey")
+            keyAlias "raykey"
+            keyPassword "123456"
+            storePassword "123456"
+        }
+        release {
+            storeFile file("../raykey")
+            keyAlias "raykey"
+            keyPassword "123456"
+            storePassword "123456"
+        }
+    }
+
+    // 自定义打包时apk名字
+    android.applicationVariants.all { variant ->
+        variant.outputs.all {
+            // 输出apk名称为app_v3.0(45)_pp.apk
+            // outputFileName = "app_v${defaultConfig.versionName}(${defaultConfig.versionCode})_${variant.productFlavors[0].name}.apk"
+            if(variant.buildType.name == ('release')) {
+                outputFileName = "app(${defaultConfig.versionCode})${defaultConfig.versionName}_${variant.productFlavors[0].name}_${releaseTime()}.apk"
+            } else if(variant.buildType.name == ('debug')) {
+                outputFileName = "app(${defaultConfig.versionCode})${defaultConfig.versionName}_${variant.productFlavors[0].name}_debug.apk"
+            }
+        }
+    }
+
+    // 多渠道打包
+    flavorDimensions "default"
+    productFlavors {
+        ray {
+            dimension "default"
+            manifestPlaceholders = [CHANNEL_VALUE: "android"]
+            signingConfig signingConfigs.release
+        }
+        rayTest {
+            dimension "default"
+            manifestPlaceholders = [CHANNEL_VALUE: "testRay"]
+            signingConfig signingConfigs.release
+        }
+    }
+    productFlavors.all {
+        flavor -> flavor.manifestPlaceholders = [CHANNEL_VALUE: name]
+    }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+//    lint {
+//        baseline file('lint-baseline.xml')
+//        disable 'GoogleAppIndexingWarning'
+//    }
 
     lintOptions {
         disable 'GoogleAppIndexingWarning'
         baseline file("lint-baseline.xml")
     }
-}
 
+
+}
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
@@ -35,4 +98,11 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    implementation "io.reactivex:rxjava:$rx_java_version"
+    implementation "io.reactivex:rxandroid:$rx_android_version"
+    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit_converter_gson_version"
+    implementation "com.google.code.gson:gson:$gson_version"
+    implementation "com.github.bumptech.glide:glide:$glide_version"
 }
+

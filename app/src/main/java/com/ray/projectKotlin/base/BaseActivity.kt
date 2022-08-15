@@ -25,8 +25,6 @@ import com.ray.projectKotlin.R
 import java.io.Serializable
 import com.ray.projectKotlin.commons.ToastUtils
 
-
-
 /**
  * activity抽象类
  * @create by ray on 2018/12/06
@@ -195,7 +193,7 @@ abstract class BaseActivity<P : BasePresenter> : AppCompatActivity() {
     /******** 基准分辨率 **********/
     private val UI_STANDARD_WIDTH = 1080f
     /******** 缩放比例值 **********/
-    private var scale = 0f
+    var scale = 0f
     override fun setContentView(layoutResID: Int) {
         //var view = View.inflate(this, layoutResID, null)
         //this.setContentView(view)
@@ -240,7 +238,7 @@ abstract class BaseActivity<P : BasePresenter> : AppCompatActivity() {
         super.setContentView(view, params)
     }
 
-    private fun initScreenScale() {
+    fun initScreenScale() {
         var displayMetrics = this.resources.displayMetrics;
         var width = displayMetrics.widthPixels
         scale = width / UI_STANDARD_WIDTH;
