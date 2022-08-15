@@ -6,6 +6,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import com.ray.projectKotlin.R
 import com.ray.projectKotlin.commons.Logger
 import com.ray.projectKotlin.commons.RelayoutTool
 import com.ray.projectKotlin.config.ProjectApplication
@@ -24,7 +26,6 @@ abstract class BaseFragment<P : BasePresenter> : Fragment() {
     protected var appContext: ProjectApplication? = null
 
     protected var mActivity: BaseActivity<*>? = null
-    private var mContentView: View? = null
 
 
     /**
@@ -99,30 +100,25 @@ abstract class BaseFragment<P : BasePresenter> : Fragment() {
     /**
      * 初始化布局
      */
-    protected abstract fun initView(view: View?)
+    protected abstract fun initView()
 
-    //    var bind:Unbinder? = null
     override fun onCreateView(
         inflater: LayoutInflater?,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        mContentView = inflater?.inflate(initLayout(), container, false)
-
-        if (mActivity?.scale == 0f) {
-            mActivity?.initScreenScale();
-        }
-        if (mActivity?.scale != 1f) {
-            mContentView?.let { RelayoutTool.relayoutViewHierarchy(it, mActivity?.scale!!) };
-        }
-
-
-        return mContentView
+        var view = View.inflate(mActivity, R.layout.fragment_container, null)
+        var container: LinearLayout = view.findViewById(R.id.containerLinearLayout)
+        var mainView = View.inflate(mActivity, initLayout(), null)
+        container.addView(mActivity?.measureView(mainView),
+            ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT))
+        return view
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initView(view)
+        initView()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
