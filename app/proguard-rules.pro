@@ -31,3 +31,15 @@
 # for DexGuard only
 -keepresourcexmlelements manifest/application/meta-data@value=GlideModule
 
+# TBS-webview混淆
+-dontwarn dalvik.**
+-dontwarn com.tencent.smtt.**
+
+-keep class com.tencent.smtt.** {
+    *;
+}
+
+-keep class com.tencent.tbs.** {
+    *;
+}
+

@@ -3,6 +3,8 @@
 
     <!-- 网络权限 -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- TBS-webview需要权限 -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <!-- 操作外部存储设备 -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <!-- 读取外部存储设备 -->

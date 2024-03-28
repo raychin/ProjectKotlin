@@ -88,6 +88,17 @@ android {
         baseline file("lint-baseline.xml")
     }
 
+    sourceSets {
+        main {
+            jniLibs.srcDir 'libs'
+        }
+    }
+
+    repositories {
+        flatDir {
+            dirs 'libs'
+        }
+    }
 
 }
 

@@ -4,6 +4,8 @@ import android.app.Application
 import android.text.TextUtils
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
+import com.tencent.smtt.sdk.QbSdk
+import com.tencent.smtt.sdk.QbSdk.PreInitCallback
 import javax.net.ssl.TrustManager
 import javax.net.ssl.X509TrustManager
 import java.security.SecureRandom;
@@ -52,6 +54,11 @@ class ProjectApplication : Application() {
         sInstance = this;
         AppConfig.getAppConfig(this);
         handleSSLHandshake()
+
+        /**
+         * TBS-webview初始化，在App启动后尽可能早地调用初始化接口，进行内核预加载
+         * tbs_sdk_thirdapp_v4.3.0.316_44216_sharewithdownloadwithfile_withoutGame_obfs_20220728_101601.jar
+         */
     }
 
     /**
