@@ -2,17 +2,14 @@ apply plugin: 'com.android.application'
 
 apply plugin: 'kotlin-android'
 
-apply plugin: 'kotlin-android-extensions'
-//apply plugin: 'kotlin-parcelize'
-
-def releaseTime() {
+static def releaseTime() {
     return new Date().format("yyyy-MM-dd", TimeZone.getTimeZone("UTC"))
 }
 
 android {
-//    buildFeatures {
-//        viewBinding true
-//    }
+    buildFeatures {
+        viewBinding true
+    }
     compileSdkVersion rootProject.ext.compile_version
     defaultConfig {
         applicationId rootProject.ext.app_id
@@ -42,8 +39,8 @@ android {
     }
 
     // 自定义打包时apk名字
-    android.applicationVariants.all { variant ->
-        variant.outputs.all {
+    android.applicationVariants.configureEach { variant ->
+        variant.outputs.configureEach {
             // 输出apk名称为app_v3.0(45)_pp.apk
             // outputFileName = "app_v${defaultConfig.versionName}(${defaultConfig.versionCode})_${variant.productFlavors[0].name}.apk"
             if(variant.buildType.name == ('release')) {
@@ -68,7 +65,7 @@ android {
             signingConfig signingConfigs.release
         }
     }
-    productFlavors.all {
+    productFlavors.configureEach {
         flavor -> flavor.manifestPlaceholders = [CHANNEL_VALUE: name]
     }
 
@@ -106,7 +103,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "com.android.support:appcompat-v7:$support_version"
-    testImplementation 'junit:junit:4.12'
+    testImplementation "junit:junit:$junit_version"
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation "io.reactivex:rxjava:$rx_java_version"
