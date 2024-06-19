@@ -6,6 +6,7 @@ package com.ray.projectKotlin.base
  */
 interface IActivityEvent {
     fun onCreate()
+    fun onRestart()
     fun onStart()
     fun onResume()
     fun onPause()

@@ -29,8 +29,8 @@ import com.ray.projectKotlin.commons.ToastUtils
  * activity抽象类
  * @create by ray on 2018/12/06
  */
-abstract class BaseActivity<P : BasePresenter> : AppCompatActivity() {
-    protected val rayTag = this.javaClass.simpleName!!
+abstract class BaseActivity<P : BasePresenter> : AppCompatActivity(), IBaseView {
+    protected val rayTag:String = this.javaClass.simpleName
 
     protected var presenter: P? = null
     protected var appContext: ProjectApplication? = null
@@ -287,7 +287,12 @@ abstract class BaseActivity<P : BasePresenter> : AppCompatActivity() {
      */
     abstract fun initData()
 
-
+    override fun onRestart() {
+        super.onRestart()
+        if(presenter != null) {
+            presenter!!.onRestart()
+        }
+    }
     override fun onStart() {
         super.onStart()
         if(presenter != null) {
@@ -393,6 +398,7 @@ abstract class BaseActivity<P : BasePresenter> : AppCompatActivity() {
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == 1) {
+            Logger.d(rayTag + "onRequestPermissionsResult", grantResults.toString())
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 if (!grantResults.isEmpty()) {
                     return
@@ -416,6 +422,9 @@ abstract class BaseActivity<P : BasePresenter> : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    override fun updateView(event: ResultEvent) {
     }
 
     /**

@@ -42,11 +42,11 @@ android {
     android.applicationVariants.configureEach { variant ->
         variant.outputs.configureEach {
             // 输出apk名称为app_v3.0(45)_pp.apk
-            // outputFileName = "app_v${defaultConfig.versionName}(${defaultConfig.versionCode})_${variant.productFlavors[0].name}.apk"
+            // outputFileName = "app_v${defaultConfig.versionName}_${defaultConfig.versionCode}_${variant.productFlavors[0].name}.apk"
             if(variant.buildType.name == ('release')) {
-                outputFileName = "app(${defaultConfig.versionCode})${defaultConfig.versionName}_${variant.productFlavors[0].name}_${releaseTime()}.apk"
+                outputFileName = "app${defaultConfig.versionName}_${defaultConfig.versionCode}_${variant.productFlavors[0].name}_${releaseTime()}.apk"
             } else if(variant.buildType.name == ('debug')) {
-                outputFileName = "app(${defaultConfig.versionCode})${defaultConfig.versionName}_${variant.productFlavors[0].name}_debug.apk"
+                outputFileName = "app${defaultConfig.versionName}_${defaultConfig.versionCode}_${variant.productFlavors[0].name}_debug.apk"
             }
         }
     }

@@ -53,7 +53,7 @@ class ProjectApplication : Application() {
         super.onCreate()
         sInstance = this;
         AppConfig.getAppConfig(this);
-        handleSSLHandshake()
+//        handleSSLHandshake()
 
         /**
          * TBS-webview初始化，在App启动后尽可能早地调用初始化接口，进行内核预加载
